@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kasir Sumber Rejeki</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="login" id="loginBox">
+  <h2>Login Kasir</h2>
+  <input id="user" placeholder="Username">
+  <input id="pass" type="password" placeholder="Password">
+  <button onclick="login()">Masuk</button>
+  <p>pass admin / 1234</p>
+</div>
+
+<div class="app hidden" id="app">
+  <h1>Toko Sumber Rejeki</h1>
+  <p id="tanggal"></p>
+
+  <div class="form">
+    <input id="nama" placeholder="Nama Barang">
+    <input id="harga" type="number" placeholder="Harga">
+    <input id="jumlah" type="number" placeholder="Jumlah">
+    <button onclick="tambahBarang()">Tambah</button>
+  </div>
+
+  <table>
+    <thead><tr><th>Barang</th><th>Harga</th><th>Jumlah</th><th>Subtotal</th><th>Aksi</th></tr></thead>
+    <tbody id="list"></tbody>
+  </table>
+
+  <h2>Total: Rp <span id="total">0</span></h2>
+
+  <button onclick="simpanTransaksi()">Simpan Transaksi</button>
+  <button onclick="window.print()">Cetak Struk</button>
+
+  <h3>Riwayat Transaksi</h3>
+  <ul id="riwayat"></ul>
+
+  <h3>Total Penjualan</h3>
+  <p>Rp <span id="statistik">0</span></p>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
