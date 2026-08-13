@@ -15,8 +15,8 @@
       <input id="pass" type="password" placeholder="Password (1234)">
       <button class="btn btn-primary" onclick="login()">Masuk</button>
     </div>
-    <p class="hint">Petunjuk: Gunakan <b>admin</b> / <b>1234</b></p>
-  </div> <!-- ✅ FIX: penutup .login dipindah ke sini -->
+   
+  </div> 
 
   <div class="app hidden" id="app">
     <header class="app-header">
@@ -65,14 +65,14 @@
           </div>
         </div>
 
-        <!-- INVENTORY CARD -->
+        
         <div class="card">
           <div class="card-header-flex">
             <h3>Pengelolaan Stok Barang (Inventory)</h3>
             <button class="btn btn-primary" style="font-size:0.85rem; padding:7px 14px;" onclick="bukaModalTambahBarang()">+ Tambah Barang</button>
           </div>
 
-          <!-- Search inventory -->
+         
           <div class="search-box">
             <input id="searchInventory" placeholder="🔍 Cari nama / kode barang..." oninput="renderInventory()">
           </div>
