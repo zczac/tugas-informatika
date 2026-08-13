@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  
+
   <div class="login" id="loginBox">
     <h2>Login Kasir</h2>
     <div class="form-group">
@@ -15,8 +15,9 @@
       <input id="pass" type="password" placeholder="Password (1234)">
       <button class="btn btn-primary" onclick="login()">Masuk</button>
     </div>
-  </div>
- 
+    <p class="hint">Petunjuk: Gunakan <b>admin</b> / <b>1234</b></p>
+  </div> <!-- ✅ FIX: penutup .login dipindah ke sini -->
+
   <div class="app hidden" id="app">
     <header class="app-header">
       <div>
@@ -27,10 +28,9 @@
     </header>
 
     <div class="grid-container">
-      
+
       <div class="main-column">
-        
-        
+
         <div class="card">
           <h3>Scan Barcode / Tambah Barang</h3>
           <div class="form-row">
@@ -46,7 +46,6 @@
           </div>
         </div>
 
-        
         <div class="card">
           <h3>Keranjang Belanja</h3>
           <div class="table-responsive">
@@ -61,16 +60,23 @@
                   <th>Aksi</th>
                 </tr>
               </thead>
-              <tbody id="list">
-                
-              </tbody>
+              <tbody id="list"></tbody>
             </table>
           </div>
         </div>
 
-        
+        <!-- INVENTORY CARD -->
         <div class="card">
-          <h3>Pengelolaan Stok Barang (Inventory)</h3>
+          <div class="card-header-flex">
+            <h3>Pengelolaan Stok Barang (Inventory)</h3>
+            <button class="btn btn-primary" style="font-size:0.85rem; padding:7px 14px;" onclick="bukaModalTambahBarang()">+ Tambah Barang</button>
+          </div>
+
+          <!-- Search inventory -->
+          <div class="search-box">
+            <input id="searchInventory" placeholder="🔍 Cari nama / kode barang..." oninput="renderInventory()">
+          </div>
+
           <div class="table-responsive">
             <table>
               <thead>
@@ -79,23 +85,20 @@
                   <th>Nama Barang</th>
                   <th>Harga</th>
                   <th>Stok Tersedia</th>
-                  <th>Aksi Cepat</th>
+                  <th>Aksi</th>
                 </tr>
               </thead>
-              <tbody id="inventoryList">
-              </tbody>
+              <tbody id="inventoryList"></tbody>
             </table>
           </div>
         </div>
       </div>
 
-      
       <div class="side-column">
-        
-        
+
         <div class="card summary-card">
           <h3>Kalkulator Pembayaran</h3>
-          
+
           <div class="summary-line">
             <span>Subtotal Belanja:</span>
             <strong>Rp <span id="subtotalDisplay">0</span></strong>
@@ -139,23 +142,78 @@
           </div>
         </div>
 
-        
         <div class="card">
           <div class="card-header-flex">
             <h3>Riwayat Transaksi</h3>
             <button class="btn btn-export" onclick="eksporLaporanCSV()">Ekspor CSV</button>
           </div>
-          
+
           <div class="stat-box">
             <span>Total Penjualan akumulatif:</span>
             <h4>Rp <span id="statistik">0</span></h4>
           </div>
 
-          <ul id="riwayat" class="history-list">
-            
-          </ul>
+          <ul id="riwayat" class="history-list"></ul>
         </div>
 
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================== MODAL TAMBAH/EDIT BARANG ======================== -->
+  <div class="modal-overlay hidden" id="modalOverlay" onclick="tutupModal(event)">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 id="modalJudul">Tambah Barang Baru</h3>
+        <button class="modal-close" onclick="tutupModalLangsung()">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <input type="hidden" id="editKodeAsli">
+
+        <div class="field-group">
+          <label>Kode Barcode</label>
+          <input id="modalKode" placeholder="Contoh: 8991234006" maxlength="20">
+          <small class="field-hint">Kosongkan untuk generate otomatis</small>
+        </div>
+
+        <div class="field-group">
+          <label>Nama Barang <span class="required">*</span></label>
+          <input id="modalNama" placeholder="Contoh: Teh Botol 350ml">
+        </div>
+
+        <div class="field-group">
+          <label>Harga Satuan (Rp) <span class="required">*</span></label>
+          <input id="modalHarga" type="number" min="0" placeholder="Contoh: 5000">
+        </div>
+
+        <div class="field-group">
+          <label>Stok Tersedia <span class="required">*</span></label>
+          <input id="modalStok" type="number" min="0" placeholder="Contoh: 50">
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="tutupModalLangsung()">Batal</button>
+        <button class="btn btn-primary" id="modalBtnSimpan" onclick="simpanBarangModal()">Simpan Barang</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================== MODAL KONFIRMASI HAPUS ======================== -->
+  <div class="modal-overlay hidden" id="modalHapusOverlay" onclick="tutupModalHapus(event)">
+    <div class="modal-box modal-box-sm">
+      <div class="modal-header">
+        <h3>Hapus Barang</h3>
+        <button class="modal-close" onclick="tutupModalHapusLangsung()">✕</button>
+      </div>
+      <div class="modal-body">
+        <p>Apakah kamu yakin ingin menghapus barang ini dari inventaris?</p>
+        <div class="hapus-preview" id="hapusPreview"></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="tutupModalHapusLangsung()">Batal</button>
+        <button class="btn btn-danger" id="btnKonfirmasiHapus" onclick="konfirmasiHapusBarang()">Ya, Hapus</button>
       </div>
     </div>
   </div>
