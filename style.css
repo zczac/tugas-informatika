@@ -55,12 +55,6 @@ body {
   gap: 12px;
 }
 
-.hint {
-  margin-top: 15px;
-  font-size: 0.85rem;
-  color: var(--text-muted);
-}
-
 .app-header {
   display: flex;
   justify-content: space-between;
